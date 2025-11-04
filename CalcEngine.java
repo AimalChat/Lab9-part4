@@ -21,6 +21,9 @@ public class CalcEngine
         displayValue = 0;
         previousOperator = ' ';
         leftOperand = 0;
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
     }
 
     /**
@@ -43,6 +46,9 @@ public class CalcEngine
         displayValue = displayValue * 10 + number;
         
         reportState("end of numberPressed");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
     }
 
     /**
@@ -51,10 +57,16 @@ public class CalcEngine
     public void plus()
     {
         System.out.println("plus called");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
         applyPreviousOperator();
         previousOperator = '+';
         displayValue = 0;
         reportState("end of plus");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
     }
 
     /**
@@ -65,6 +77,9 @@ public class CalcEngine
         applyPreviousOperator();
         previousOperator = '-';
         displayValue = 0;
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
     }
     
     /**
@@ -72,15 +87,27 @@ public class CalcEngine
      */
     public void equals()
     {
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
         System.out.println("equals called");
         if(previousOperator == '+') {
             displayValue = leftOperand + displayValue;
+            System.out.println(displayValue);
+            System.out.println(previousOperator);
+            System.out.println(leftOperand);
         }
         else {
             displayValue = leftOperand - displayValue;
+            System.out.println(displayValue);
+            System.out.println(previousOperator);
+            System.out.println(leftOperand);
         }
         leftOperand = 0;
         reportState("end of equals");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
     }
 
     /**
@@ -88,9 +115,15 @@ public class CalcEngine
      */
     public void clear()
     {
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
         System.out.println("clear called");
         displayValue = 0;
         reportState("end of clear");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
     }
 
     /**
@@ -138,6 +171,9 @@ public class CalcEngine
      */
     private void applyPreviousOperator()
     {
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
         System.out.println("applyPreviousOperator called");
         if(previousOperator == '+') {
             leftOperand += displayValue;
@@ -150,5 +186,8 @@ public class CalcEngine
             leftOperand = displayValue;
         }
         reportState("end of applyPreviousOperator");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
     }
 }
