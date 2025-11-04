@@ -8,25 +8,227 @@ a pocket calculator. It includes a complete test rig to demonstrate
 that the engine works as it should.
 
 31. Open the calculator-engine-print project and complete the addition of print statements to each method 
-and the constructor. 
+and the constructor.
 
 31b.
+/**
+ * The main part of the calculator doing the calculations.
+ * This version incorporates debugging print statements. 
+ * @author Hacker T. Largebrain (version 1.0)
+ * @version 1.1
+ */
+public class CalcEngine
+{
+    // The value in the display.
+    private int displayValue;
+    // The previous operator typed (+ or -).
+    private char previousOperator;
+    // The left operand to previousOperator.
+    private int leftOperand;
+
+    /**
+     * Create a CalcEngine instance.
+     */
+    public CalcEngine()
+    {
+        displayValue = 0;
+        previousOperator = ' ';
+        leftOperand = 0;
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+    }
+
+    /**
+     * Return the value of the calculator that should appear in the display right now.
+     * @return The value to be shown on the calculator display.
+     */
+    public int getDisplayValue()
+    {
+        return displayValue;
+    }
+
+    /**
+     * A number button was pressed. Process it.
+     * @param number The single digit.
+     */
+    public void numberPressed(int number)
+    {
+        System.out.println("numberPressed called with: " + number);
+        
+        displayValue = displayValue * 10 + number;
+        
+        reportState("end of numberPressed");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+    }
+
+    /**
+     * This method should be called when the '+' button was pressed. 
+     */
+    public void plus()
+    {
+        System.out.println("plus called");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+        applyPreviousOperator();
+        previousOperator = '+';
+        displayValue = 0;
+        reportState("end of plus");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+    }
+
+    /**
+     * This method should be called when the '-' button was pressed.
+     */
+    public void minus()
+    {
+        applyPreviousOperator();
+        previousOperator = '-';
+        displayValue = 0;
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+    }
+    
+    /**
+     * This method should be called when the '=' button was pressed.
+     */
+    public void equals()
+    {
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+        System.out.println("equals called");
+        if(previousOperator == '+') {
+            displayValue = leftOperand + displayValue;
+            System.out.println(displayValue);
+            System.out.println(previousOperator);
+            System.out.println(leftOperand);
+        }
+        else {
+            displayValue = leftOperand - displayValue;
+            System.out.println(displayValue);
+            System.out.println(previousOperator);
+            System.out.println(leftOperand);
+        }
+        leftOperand = 0;
+        reportState("end of equals");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+    }
+
+    /**
+     * This method should be called when the 'C' (clear) button was pressed.
+     */
+    public void clear()
+    {
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+        System.out.println("clear called");
+        displayValue = 0;
+        reportState("end of clear");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+    }
+
+    /**
+     * Return the name of this calculator to be shown as the title of the application.
+     * @return The title of this calculation engine.
+     */
+    public String getTitle()
+    {
+        return "Super Calculator";
+    }
+
+    /**
+     * Return the name of the author of this application.
+     * @return The author of this engine.
+     */
+    public String getAuthor()
+    {
+        return "Hacker T. Largebrain";
+    }
+
+    /**
+     * Return the version number of this application.
+     * @return The version number of this engine.
+     */
+    public String getVersion()
+    {
+        return "version 0.2";
+    }
+
+    /**
+     * Print the values of this object's fields.
+     * @param where Where this state occurs.
+     */
+    public void reportState(String where)
+    {
+        System.out.println("displayValue: " + displayValue +
+                           " leftOperand: " + leftOperand +
+                           " previousOperator: " + previousOperator + 
+                           " at " + where);
+    }
+    
+    /**
+     * An operator button has been pressed. Apply the immediately preceding operator to
+     * calculate an intermediate result. This will form the left operand of the new operator.
+     */
+    private void applyPreviousOperator()
+    {
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+        System.out.println("applyPreviousOperator called");
+        if(previousOperator == '+') {
+            leftOperand += displayValue;
+        }
+        else if(previousOperator == '-') {
+            leftOperand -= displayValue;
+        }
+        else {
+            // There was no preceding operator.
+            leftOperand = displayValue;
+        }
+        reportState("end of applyPreviousOperator");
+        System.out.println(displayValue);
+        System.out.println(previousOperator);
+        System.out.println(leftOperand);
+    }
+}
+
 
 32. Create a CalcEngineTester in the project and run the testAll method. Does the output that results help 
 you identify where the problem lies? 
 
-32b.
+32b.Somewhat, its not terrible but isnt precise enough to help direcctly point out logic errors, thats 
+what I think.
 
 33. Do you feel that the amount of output produced by the fully annotated CalcEngine class is too little, 
 too much, or about right? If you feel that it is too little or too much, either add further print 
 statements or remove some until you feel that you have the right level of detail. 
 
-33b.
+33b.I think its too little, because it shows only the before and after results and not what happens each 
+step of the way.
 
 34. What are the respective advantages and disadvantages of using manual walkthroughs or print statements 
 for debugging? Discuss. 
 
-34b.
+34b.With manual walkthroughs, you can focus on truly making sure your reasoning is sound without relying 
+on the compiler, which is normal since we all prefer easy and conveniency. However, with that comes the 
+time consumming aspcet of doing this approach, not to mention the possibility of losing track where you 
+are, either the current line of code, variables, methods, step intos and other things. With print 
+statements you can find yourself in many, many, many lines of code that clutter the source code, which 
+you'll have to remove later on. However, this approach is much less time consuming and helps sound out 
+reasoning wihtout too much hastle compared to paper walkthroughs.
 
 35. Using the calculator-engine project, set a breakpoint in the first line of the testPlus method in the 
 CalcEngineTester class. Execute this method. When the debugger appears, walk through the code step 
