@@ -234,7 +234,7 @@ reasoning wihtout too much hastle compared to paper walkthroughs.
 CalcEngineTester class. Execute this method. When the debugger appears, walk through the code step 
 by step. Experiment with both the Step and Step Into buttons. 
 
-35b.
+35b.Did it! It works as intended after I stepped through each step checking the CalcEngineTester' seperate states after each one and everything adds up well!
 
 36. Challenge exercise In practice, you will probably find that Hacker T. Largebrain’s attempt to program 
 the CalcEngine class is too full of errors to be worth trying to fix. Instead, write your own version of 
@@ -252,6 +252,100 @@ attached to the CalcEngine. Add similar tests to those Hacker used (and any othe
 include correct assertions. 
 
 37b.
+
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/**
+ * The test class CalcEngineTest.
+ *
+ * @author  (Aimal)
+ * @version (2025-11-05)
+ */
+public class CalcEngineTest
+{
+    private CalcEngine calcEngi1;
+
+    /**
+     * Default constructor for test class CalcEngineTest
+     */
+    public CalcEngineTest()
+    {
+    }
+
+    /**
+     * Sets up the test fixture.
+     *
+     * Called before every test case method.
+     */
+    @BeforeEach
+    public void setUp()
+    {
+        calcEngi1 = new CalcEngine();
+    }
+
+    /**
+     * Tears down the test fixture.
+     *
+     * Called after every test case method.
+     */
+    @AfterEach
+    public void tearDown()
+    {
+    }
+
+    @Test
+    public void testPlus()
+    {
+        //make sure the calculator is in a state to perform.
+        calcEngi1.clear();
+        //display value should now be 5.
+        calcEngi1.numberPressed(5);
+        //previous operand should be + after this line.
+        calcEngi1.plus();
+        //left operand is now 5 and display value is 3 now
+        calcEngi1.numberPressed(3);
+        //calculate.
+        calcEngi1.equals();
+        //should return display value at 8.
+        assertEquals(8, calcEngi1.getDisplayValue());
+    }
+
+    @Test
+    public void testMinus()
+    {
+        //make sure the calculator is in a state to perform.
+        calcEngi1.clear();
+        //display value should now be 1.
+        calcEngi1.numberPressed(1);
+        //previous operand should be - after this line.
+        calcEngi1.minus();
+        //left operand is now 1 and display value is 6 now
+        calcEngi1.numberPressed(6);
+        //calculate.
+        calcEngi1.equals();
+        //should return display value at -5.
+        assertEquals(-5, calcEngi1.getDisplayValue());
+    }
+
+    @Test
+    public void testClear()
+    {
+        //pretend to calculate 9 - 7.
+        calcEngi1.numberPressed(9);
+        calcEngi1.minus();
+        calcEngi1.numberPressed(7);
+        calcEngi1.clear();
+        //should display 0 for all 3.
+        assertEquals(0, calcEngi1.getDisplayValue());
+        assertEquals(0, calcEngi1.getLeftOperand());
+        assertEquals(' ', calcEngi1.getPreviousOperator());
+    }
+}
+
 
 38. Open the bricks project. Test it. There are at least four errors in this project. See if you can find 
 them and fix them. What techniques did you use to find the errors? Which technique was most useful?
