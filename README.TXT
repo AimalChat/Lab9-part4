@@ -247,6 +247,7 @@ seen, this makes asserting the correct results much easier.
 
 36b.
 
+
 37. Open your project again and add better testing by replacing Hacker’s test class with a unit test class 
 attached to the CalcEngine. Add similar tests to those Hacker used (and any others you find useful), and
 include correct assertions. 
@@ -350,4 +351,289 @@ public class CalcEngineTest
 38. Open the bricks project. Test it. There are at least four errors in this project. See if you can find 
 them and fix them. What techniques did you use to find the errors? Which technique was most useful?
 
-38b.
+38b.There were many errors, such as the weight method labeled incorrectly, that method was rather for the 
+mass. ALSO, the depth parameter was so confusing so I put in what shouldve been there, length. I did add a 
+getDepth in case it was needed. Also, witht the renaming of the getWeight method, I made it abundently 
+clear that you first multiply and then divide. Though im sure theres a way to just write one line, I felt 
+more comfortable doing it this way. In the getSurfaceArea method there was a small mistake where the 
+orginal code added the side1 twice, ignoring side2 and giving a faulty output. Then in the pallet class, I 
+changed the name of weight to mass, since, once again, we are not dealing with gravity and such. In the
+newly changed getWeight method(renamed as getMass), they did add the base mass of the pallet, meaning it 
+only outputted the mass of the bricks. Finally for the last explicit error I found, the getHeight method. 
+Rather than using a modulus operator, it should have been a multiplication of a brick * how many bricks 
+layers of bricks there are. For me, the most useful technique was the unit test classes. As I was able to 
+spot the mistakes, after having understood what the classes' roles were, also manual walktrhough did help 
+surprisngly, I was able to easily trace back what was either wrong or lacking in the methods. I did not 
+use print statements unfortunately.
+
+//Brick & its respective unit tester
+
+/**
+ * Brick models a simple brick.
+ * 
+ * @author: Michael Kölling and David J. Barnes
+ * @version 7.0
+ */
+public class Brick
+{
+    // Constant.
+    private static final int DENSITY_PER_CM3 = 2;  // mass/density of material per cubic cm in grams
+
+    private int height;
+    private int width;
+    private int length;
+
+    /**
+     * Create a Brick given edge lengths in centimeters.
+     * @param height The brick's height.
+     * @param width The brick's width.
+     * @param depth The brick's length.
+     */
+    public Brick(int height, int width, int length)
+    {
+        this.height = height;
+        this.width = width;
+        this.length = length;
+    }
+    
+    public int getDepth()
+    {
+        int depth = getVolume()/(height*width);
+        return depth;
+    }
+    
+    public int getWidth()
+    {
+        return width;
+    }
+    
+    public int getLength()
+    {
+        return length;
+    }
+
+    /**
+     * @return The surface area of this brick in square centimeters.
+     */
+    public double getSurfaceArea()
+    {
+        double side1 = length * width;
+        double side2 = length * height;
+        double side3 = width * height;
+        double total = (side1 + side2 + side3) * 2;//repeated side 1 twice
+
+        return total;
+    }
+
+    /**
+     * @return The mass of this brick in kg.
+     */
+    public double getMass()
+    {
+        double mass = getVolume() * DENSITY_PER_CM3;
+        return mass / 1000;//error found!
+    }
+
+    /**
+     * @return The volume of this brick in cubic centimeters.
+     */
+    public int getVolume()
+    {
+        return width * height * length;
+    }
+
+    /**
+     * @return The height of this brick in centimeters.
+     */
+    public double getHeight()
+    {
+        return height;
+    }
+}
+
+
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/**
+ * The test class BrickTest.
+ *
+ * @author  (your name)
+ * @version (a version number or a date)
+ */
+public class BrickTest
+{
+    private Brick brick2;
+
+    /**
+     * Default constructor for test class BrickTest
+     */
+    public BrickTest()
+    {
+    }
+
+    /**
+     * Sets up the test fixture.
+     *
+     * Called before every test case method.
+     */
+    @BeforeEach
+    public void setUp()
+    {
+        brick2 = new Brick(3, 9, 2);
+    }
+
+    /**
+     * Tears down the test fixture.
+     *
+     * Called after every test case method.
+     */
+    @AfterEach
+    public void tearDown()
+    {
+    }
+
+    @Test
+    public void testConstructor()
+    {
+        assertEquals(9, brick2.getWidth());
+        assertEquals(3, brick2.getHeight(), 0.1);
+        assertEquals(2, brick2.getDepth());
+    }
+
+    @Test
+    public void testVolume()
+    {
+        assertEquals(54, brick2.getVolume());
+    }
+
+    @Test
+    public void testSurfaceArea()
+    {
+        assertEquals(102, brick2.getSurfaceArea(), 0.1);//error found!
+    }
+    
+
+    @Test
+    public void testMass()
+    {
+        assertEquals(0.108, brick2.getMass(), 0.1);//error found!
+    }
+}
+
+//pallet class and its unit tester
+
+
+/**
+ * A pallet is a stack of bricks on a wooden base.
+ *
+ * @author: Michael Kölling and David J. Barnes
+ * @version 7.0
+ */
+public class Pallet
+{
+    private static final double BASE_MASS = 6.5;  // in kg
+    private static final double BASE_HEIGHT = 15;  // in cm
+
+    private Brick aBrick;
+    private int bricksInPlane;
+    private int height;
+
+    /**
+     * Create a pallet with a given number of bricks.
+     * @param bricksInPlane The number of bricks in each level on the base.
+     * @param height The number of bricks stacked on top of each other.
+     */
+    public Pallet(int bricksInPlane, int height)
+    {
+        this.bricksInPlane = bricksInPlane;
+        this.height = height;
+        aBrick = new Brick(8, 20, 12);
+        //Means that volume = 1920
+        //means that mass = 3.84
+    }
+
+    /**
+     * @return The mass of the pallet (in kg)
+     */
+    public double getMass()
+    {
+        int numberOfBricks = bricksInPlane * height;
+        return (aBrick.getMass() * numberOfBricks) + BASE_MASS;//ERROR found!
+        //did not add the base mass.
+    }
+
+    /**
+     * @return The height of this stack (in cm)
+     */
+    public double getHeight()
+    {
+        return (aBrick.getHeight() * height) + BASE_HEIGHT;//error found!
+        //not modulus operator that is needed but rather *, a multiplication.
+        
+    }
+}
+
+
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/**
+ * The test class PalletTest.
+ *
+ * @author  (your name)
+ * @version (a version number or a date)
+ */
+public class PalletTest
+{
+    private Pallet pallet1;
+
+    /**
+     * Default constructor for test class PalletTest
+     */
+    public PalletTest()
+    {
+    }
+
+    /**
+     * Sets up the test fixture.
+     *
+     * Called before every test case method.
+     */
+    @BeforeEach
+    public void setUp()
+    {
+        pallet1 = new Pallet(10, 2);
+    }
+
+    /**
+     * Tears down the test fixture.
+     *
+     * Called after every test case method.
+     */
+    @AfterEach
+    public void tearDown()
+    {
+    }
+
+    @Test
+    public void testMass()
+    {
+        assertEquals(83.3, pallet1.getMass(), 0.1);
+    }
+
+    @Test
+    public void testHeight()
+    {
+        assertEquals(31, pallet1.getHeight(), 0.1);
+    }
+}
+
+
+
